@@ -61,19 +61,19 @@ export const servicesData: Service[] = [
   {
     id: "ai-chatbot-base",
     name: "AI Chatbot (Base)",
-    price: 500,
+    price: 350,
     category: "addon",
     description:
-      "Chatbot integrato nel sito per rispondere alle domande frequenti, qualificare i contatti e guidare l’utente (da €500, in base a contenuti e flussi).",
+      "Chatbot integrato nel sito per rispondere alle domande frequenti, qualificare i contatti e guidare l’utente (in base a contenuti e flussi).",
     icon: "🤖",
   },
   {
     id: "ai-automation-n8n",
-    name: "AI Automation con n8n",
+    name: "AI Automation Server",
     price: 500,
     category: "addon",
     description:
-      "Struttura di automazioni con n8n + AI per gestire task ripetitivi (email, fatture in entrata, classificazioni, notifiche e workflow su misura). Da €500 in base alle integrazioni richieste.",
+      "Struttura di automazioni con server dedicato per gestire task ripetitivi (email, fatture in entrata, classificazioni, notifiche e workflow su misura). Il prezzo può variare in base alle integrazioni richieste.",
     icon: "🧠",
   },
 
