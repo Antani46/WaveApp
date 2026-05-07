@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export default function ContactSection() {
   const handleWhatsApp = () => {
-    window.open("https://wa.me/393XXXXXXXXX", "_blank");
+    window.open("https://wa.me/393460204981", "_blank");
   };
 
   return (
@@ -77,7 +77,7 @@ export default function ContactSection() {
                 <h3 className="text-xl font-bold text-satin-50 mb-2">Instagram</h3>
                 <p className="text-satin-400 text-sm mb-6">Vedi i dietro le quinte, i processi creativi e gli ultimi lanci ufficiali.</p>
               </div>
-              <a href="https://instagram.com" target="_blank" className="text-neon-violet font-bold hover:underline">@waveapp_dev</a>
+              <a href="https://instagram.com" target="_blank" className="text-neon-violet font-bold hover:underline">@wavedev</a>
             </GlassCard>
           </motion.div>
         </div>

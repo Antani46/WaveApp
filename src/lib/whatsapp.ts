@@ -1,6 +1,5 @@
 // ── WhatsApp Configuration ──
-// Sostituisci con il tuo numero reale (formato internazionale senza +)
-const WHATSAPP_NUMBER = "393XXXXXXXXX";
+const WHATSAPP_NUMBER = "393460204981";
 
 /**
  * Genera l'URL per l'API di WhatsApp con il messaggio formattato.
