@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'WaveApp — Agenzia Web',
-    short_name: 'WaveApp',
+    name: 'WaveDev — Agenzia Web',
+    short_name: 'WaveDev',
     description: 'Siti Web, PWA e SEO per Business Locali',
     start_url: '/',
     display: 'standalone',

@@ -18,8 +18,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "WaveApp — Siti Web & PWA per Business Locali",
-    template: "%s | WaveApp",
+    default: "WaveDev — Siti Web & PWA per Business Locali",
+    template: "%s | WaveDev",
   },
   description:
     "Trasformiamo la presenza digitale di ristoranti, lidi e attività locali con siti performanti, Progressive Web App, SEO locale e sistemi di prenotazione.",
@@ -32,19 +32,19 @@ export const metadata: Metadata = {
     "Next.js",
     "web agency",
   ],
-  authors: [{ name: "WaveApp" }],
-  creator: "WaveApp",
+  authors: [{ name: "WaveDev" }],
+  creator: "WaveDev",
   openGraph: {
     type: "website",
     locale: "it_IT",
-    siteName: "WaveApp",
-    title: "WaveApp — Siti Web & PWA per Business Locali",
+    siteName: "WaveDev",
+    title: "WaveDev — Siti Web & PWA per Business Locali",
     description:
       "Performance estreme, design che converte. Siti web, PWA e SEO per il tuo business locale.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WaveApp — Siti Web & PWA per Business Locali",
+    title: "WaveDev — Siti Web & PWA per Business Locali",
     description:
       "Performance estreme, design che converte. Siti web, PWA e SEO per il tuo business locale.",
   },

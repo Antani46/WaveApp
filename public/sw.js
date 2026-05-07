@@ -1,4 +1,4 @@
-const CACHE_NAME = 'waveapp-cache-v1';
+const CACHE_NAME = 'wavedev-cache-v1';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

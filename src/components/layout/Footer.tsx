@@ -15,7 +15,7 @@ export default function Footer() {
                 <span className="text-lg font-bold gradient-text">W</span>
               </div>
               <span className="text-lg font-semibold text-satin-50 tracking-tight">
-                Wave<span className="text-neon-cyan">App</span>
+                Wave<span className="text-neon-cyan">Dev</span>
               </span>
             </div>
             <p className="text-xs text-satin-500 max-w-xs leading-relaxed">
@@ -26,7 +26,7 @@ export default function Footer() {
           {/* Bottom Info */}
           <div className="flex flex-col items-center md:items-end gap-2">
             <p className="text-[10px] text-satin-600 uppercase tracking-widest">
-              © {currentYear} WaveApp Signature Project
+              © {currentYear} WaveDev Signature Project
             </p>
             <div className="flex items-center gap-1 text-[10px] text-satin-600 uppercase tracking-widest">
               <span>Handcrafted with</span>

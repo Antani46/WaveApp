@@ -2,10 +2,10 @@ export default function JsonLd() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "WaveApp",
+    name: "WaveDev",
     description:
       "Sviluppo siti web, Progressive Web App, SEO locale per ristoranti, lidi e attività locali.",
-    url: "https://waveapp.dev",
+    url: "https://wavedev.dev",
     areaServed: {
       "@type": "Country",
       name: "Italia",

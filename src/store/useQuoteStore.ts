@@ -85,7 +85,7 @@ export const useQuoteStore = create<QuoteStore>((set, get) => ({
       .join("\n");
 
     return [
-      `🚀 *Nuovo Preventivo WaveApp*`,
+      `🚀 *Nuovo Preventivo WaveDev*`,
       ``,
       clientName ? `👤 *Nome:* ${clientName}` : "",
       clientBusiness ? `🏢 *Attività:* ${clientBusiness}` : "",

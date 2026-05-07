@@ -38,7 +38,7 @@ export default function ContactSection() {
                 <h3 className="text-xl font-bold text-satin-50 mb-2">Email</h3>
                 <p className="text-satin-400 text-sm mb-6">Hai una richiesta specifica o un progetto complesso? Scrivimi qui.</p>
               </div>
-              <a href="mailto:info@waveapp.dev" className="text-neon-cyan font-bold hover:underline tracking-tight">info@waveapp.dev</a>
+              <a href="mailto:info@wavedev.dev" className="text-neon-cyan font-bold hover:underline tracking-tight">info@wavedev.dev</a>
             </GlassCard>
           </motion.div>
 

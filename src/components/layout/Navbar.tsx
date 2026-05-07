@@ -89,7 +89,7 @@ export default function Navbar() {
             <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-neon-cyan/5" />
           </div>
           <span className="text-lg font-semibold text-satin-50 tracking-tight">
-            Wave<span className="text-neon-cyan">App</span>
+            Wave<span className="text-neon-cyan">Dev</span>
           </span>
         </Link>
 
