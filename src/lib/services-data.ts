@@ -58,6 +58,24 @@ export const servicesData: Service[] = [
       "Ottimizzazione tecnica e setup avanzato di Google Business Profile per apparire tra i primi risultati nella tua città.",
     icon: "🎯",
   },
+  {
+    id: "ai-chatbot-base",
+    name: "AI Chatbot (Base)",
+    price: 500,
+    category: "addon",
+    description:
+      "Chatbot integrato nel sito per rispondere alle domande frequenti, qualificare i contatti e guidare l’utente (da €500, in base a contenuti e flussi).",
+    icon: "🤖",
+  },
+  {
+    id: "ai-automation-n8n",
+    name: "AI Automation con n8n",
+    price: 500,
+    category: "addon",
+    description:
+      "Struttura di automazioni con n8n + AI per gestire task ripetitivi (email, fatture in entrata, classificazioni, notifiche e workflow su misura). Da €500 in base alle integrazioni richieste.",
+    icon: "🧠",
+  },
 
   // ── Premium ──
   {
