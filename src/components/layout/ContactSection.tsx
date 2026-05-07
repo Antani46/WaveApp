@@ -4,10 +4,11 @@ import GlassCard from "@/components/ui/GlassCard";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlowButton from "@/components/ui/GlowButton";
 import { motion } from "framer-motion";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 export default function ContactSection() {
   const handleWhatsApp = () => {
-    window.open("https://wa.me/393460204981", "_blank");
+    openWhatsApp("Ciao! Vorrei maggiori informazioni su un progetto con WaveDev.");
   };
 
   return (
@@ -38,7 +39,7 @@ export default function ContactSection() {
                 <h3 className="text-xl font-bold text-satin-50 mb-2">Email</h3>
                 <p className="text-satin-400 text-sm mb-6">Hai una richiesta specifica o un progetto complesso? Scrivimi qui.</p>
               </div>
-              <a href="mailto:info@wavedev.dev" className="text-neon-cyan font-bold hover:underline tracking-tight">info@wavedev.dev</a>
+              <a href="mailto:it.wavedev@gmail.com" className="text-neon-cyan font-bold hover:underline tracking-tight">it.wavedev@gmail.com</a>
             </GlassCard>
           </motion.div>
 
@@ -77,7 +78,7 @@ export default function ContactSection() {
                 <h3 className="text-xl font-bold text-satin-50 mb-2">Instagram</h3>
                 <p className="text-satin-400 text-sm mb-6">Vedi i dietro le quinte, i processi creativi e gli ultimi lanci ufficiali.</p>
               </div>
-              <a href="https://instagram.com" target="_blank" className="text-neon-violet font-bold hover:underline">@wavedev</a>
+              <a href="https://instagram.com/it.wavedev" target="_blank" className="text-neon-violet font-bold hover:underline">@it.wavedev</a>
             </GlassCard>
           </motion.div>
         </div>

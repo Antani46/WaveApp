@@ -6,6 +6,8 @@ export default function JsonLd() {
     description:
       "Sviluppo siti web, Progressive Web App, SEO locale per ristoranti, lidi e attività locali.",
     url: "https://wavedev.dev",
+    email: "it.wavedev@gmail.com",
+    sameAs: ["https://instagram.com/it.wavedev"],
     areaServed: {
       "@type": "Country",
       name: "Italia",
@@ -21,6 +23,7 @@ export default function JsonLd() {
       "@type": "ContactPoint",
       contactType: "sales",
       availableLanguage: "Italian",
+      email: "it.wavedev@gmail.com",
     },
   };
 
