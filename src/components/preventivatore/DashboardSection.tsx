@@ -20,15 +20,15 @@ export default function DashboardSection() {
       <div className="relative mx-auto max-w-[1400px] px-6 lg:px-8">
         {/* Header */}
         <SectionHeading
-          badge="Preventivatore Interattivo"
+          badge="Servizi & Preventivo interattivo"
           badgeColor="violet"
           title={
             <>
-              Configura il tuo{" "}
-              <span className="gradient-text">progetto su misura</span>
+              Tutto ciò che serve al tuo{" "}
+              <span className="gradient-text">business digitale</span>
             </>
           }
-          subtitle="Seleziona i servizi che ti interessano. I blocchi si illuminano e il contatore aggiorna il valore in tempo reale."
+          subtitle="Dalla landing page all'e-commerce: seleziona i servizi che ti interessano e ottieni un preventivo in tempo reale, pensato per performance, conversione e crescita nel mercato locale."
         />
 
         {/* Dashboard Layout */}
