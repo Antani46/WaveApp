@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════
+   SATIN & GLOW — Design System
+   ═══════════════════════════════════════════════════════ */
+
+@theme inline {
+  /* ── Satin Palette ── */
+  --color-satin-950: #0d1017;
+  --color-satin-900: #1a1f2c;
+  --color-satin-800: #242b3d;
+  --color-satin-700: #2e3650;
+  --color-satin-600: #3d4768;
+  --color-satin-500: #4f5b7a;
+  --color-satin-400: #6b7a99;
+  --color-satin-300: #8d9bb5;
+  --color-satin-200: #b8c5dc;
+  --color-satin-100: #d6dfe9;
+  --color-satin-50: #e8edf5;
+
+  /* ── Neon Accents ── */
+  --color-neon-cyan: #00e5ff;
+  --color-neon-violet: #b44aff;
+  --color-neon-lime: #a8ff00;
+
+  /* ── Semantic Colors ── */
+  --color-background: #0d1017;
+  --color-foreground: #e8edf5;
+  --color-muted: #6b7a99;
+  --color-card: rgba(30, 36, 52, 0.6);
+  --color-card-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Typography ── */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* ── Animations ── */
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.6s ease-out;
+  --animate-fade-in: fade-in 0.5s ease-out;
+}
+
+/* ── Custom Cursor ── */
+* {
+  cursor: none !important;
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-satin-950);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* ── Radial ambient light ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 229, 255, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(180, 74, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 40% at 20% 80%, rgba(0, 229, 255, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(0, 229, 255, 0.25);
+  color: #e8edf5;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-satin-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-satin-700);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════ */
+
+/* Glass Card */
+.glass {
+  background: var(--color-card);
+  border: 1px solid var(--color-card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-hover {
+  transition: all 0.3s ease;
+}
+.glass-hover:hover {
+  border-color: rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.08), inset 0 0 30px rgba(0, 229, 255, 0.02);
+}
+
+/* Glow Effects */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), 0 0 60px rgba(0, 229, 255, 0.1);
+}
+.glow-violet {
+  box-shadow: 0 0 20px rgba(180, 74, 255, 0.3), 0 0 60px rgba(180, 74, 255, 0.1);
+}
+.glow-lime {
+  box-shadow: 0 0 20px rgba(168, 255, 0, 0.3), 0 0 60px rgba(168, 255, 0, 0.1);
+}
+
+/* Text Glow */
+.text-glow-cyan {
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+.text-glow-violet {
+  text-shadow: 0 0 20px rgba(180, 74, 255, 0.5);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff 0%, #b44aff 50%, #00e5ff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-animated {
+  background: linear-gradient(135deg, #00e5ff 0%, #b44aff 50%, #00e5ff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
+  }
+}
