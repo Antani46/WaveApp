@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-
 import Link from "next/link";
 
 const navItems = [
-  { label: "Servizi", href: "#servizi" },
+  { label: "Home", href: "__top__" },
   { label: "Preventivo", href: "#preventivo" },
   { label: "Contatti", href: "#contatti" },
 ];
@@ -30,7 +30,7 @@ export default function Navbar() {
 
       // 2. Scroll Spy per l'active state dei link
       const sections = navItems.map((item) =>
-        document.querySelector(item.href)
+        item.href === "__top__" ? null : document.querySelector(item.href)
       );
       const scrollPos = latest + window.innerHeight / 3;
 
@@ -45,10 +45,20 @@ export default function Navbar() {
           }
         }
       });
+
+      if (latest < 50) {
+        setActiveSection("__top__");
+      }
     }
   });
 
   const scrollToSection = (href: string) => {
+    if (href === "__top__") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     const el = document.querySelector(href);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
