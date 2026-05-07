@@ -29,9 +29,9 @@ export default function Footer() {
               © {currentYear} WaveDev Signature Project
             </p>
             <div className="flex items-center gap-1 text-[10px] text-satin-600 uppercase tracking-widest">
-              <span>Handcrafted with</span>
+              <span>Handcrafted with </span>
               <span className="text-neon-cyan animate-pulse">♥</span>
-              <span>in Italia</span>
+              <span> by WaveDev_DC</span>
             </div>
           </div>
         </div>
