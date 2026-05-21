@@ -221,19 +221,18 @@ export default function HeroSection() {
     setShowFirstHint(false);
     if (!containerRef.current) return;
     const isMobile = window.innerWidth < 768;
-    const multiplier = isMobile ? 0.72 : 0.58;
-    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * multiplier);
+    const targetMultiplier = isMobile ? 0.80 : 0.55;
+    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * targetMultiplier);
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 3000; // Scroll lento e costante (3 secondi)
+    const duration = 4000;
     let startTimestamp: number | null = null;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // Near-Linear Ease-Out: partenza immediata a velocità massima, frenata dolce solo alla fine
-      const eased = 1 - Math.pow(1 - progress, 1.5);
-      window.scrollTo(0, startY + distance * eased);
+      const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+      window.scrollTo(0, startY + distance * easeOutQuad);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }
