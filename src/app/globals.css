@@ -50,15 +50,12 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--color-satin-950);
-  overflow-x: hidden;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
-  overflow-x: hidden;
-  width: 100%;
 }
 
 /* ── Radial ambient light ── */
@@ -193,12 +190,5 @@ body::before {
 @media (max-width: 768px) {
   * {
     cursor: auto !important;
-  }
-
-  /* Blindatura asse X mobile — clip è safe per sticky */
-  html,
-  body {
-    overflow-x: clip;
-    max-width: 100vw;
   }
 }

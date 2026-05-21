@@ -8,7 +8,6 @@ import {
   useMotionValueEvent,
   AnimatePresence,
 } from "framer-motion";
-import GlowButton from "@/components/ui/GlowButton";
 
 /* ── Mockup del "sito vecchio" (Il tuo originale) ── */
 function OldSiteMockup({ opacity }: { opacity: number }) {
@@ -155,7 +154,7 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
 
-  // ── LA LOGICA DEI TITOLI (L'unica cosa che ho cambiato) ──
+  // ── LA LOGICA DEI TITOLI ──
 
   // Titolo vecchio: sparisce, rimpicciolisce e poi viene eliminato dal DOM
   const oldTitleOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
@@ -196,15 +195,12 @@ export default function HeroSection() {
   }, [scrollYProgress]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Ad ogni scroll, resettiamo i timer
     if (timer1Ref.current) clearTimeout(timer1Ref.current);
     if (timer2Ref.current) clearTimeout(timer2Ref.current);
 
-    // Nascondi i pulsanti se usciamo dai range di tolleranza
     if (latest > 0.15 && showFirstHint) setShowFirstHint(false);
     if ((latest < 0.25 || latest > 0.85) && showSecondHint) setShowSecondHint(false);
 
-    // Timer 1: Inizio Pagina (con tolleranza fino a 0.15)
     if (latest >= 0 && latest <= 0.15) {
       if (!showFirstHint) {
         timer1Ref.current = setTimeout(() => {
@@ -212,7 +208,6 @@ export default function HeroSection() {
         }, 2500);
       }
     } 
-    // Timer 2: Stato di Hold esteso (tra 0.25 e 0.85)
     else if (latest >= 0.25 && latest <= 0.85) {
       if (!showSecondHint) {
         timer2Ref.current = setTimeout(() => {
@@ -225,23 +220,20 @@ export default function HeroSection() {
   const handleFirstHintClick = () => {
     setShowFirstHint(false);
     if (!containerRef.current) return;
-    // Target dinamico: su mobile (schermo alto e stretto) spingiamo più in profondità
     const isMobile = window.innerWidth < 768;
     const multiplier = isMobile ? 0.72 : 0.58;
     const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * multiplier);
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 2500; // Scroll cinematografico dilatato (2.5 secondi)
+    const duration = 3000; // Scroll lento e costante (3 secondi)
     let startTimestamp: number | null = null;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
-      // Quintic Ease-Out: partenza reattiva con scatto, decelerazione lunga e dolce
-      const easeOutQuintic = 1 - Math.pow(1 - progress, 5);
-      
-      window.scrollTo(0, startY + distance * easeOutQuintic);
+      // Near-Linear Ease-Out: partenza immediata a velocità massima, frenata dolce solo alla fine
+      const eased = 1 - Math.pow(1 - progress, 1.5);
+      window.scrollTo(0, startY + distance * eased);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }
@@ -257,16 +249,14 @@ export default function HeroSection() {
     const targetY = servicesSection.getBoundingClientRect().top + window.scrollY;
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 800;
+    const duration = 1200;
     let startTimestamp: number | null = null;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // Quintic Ease-Out anche per il secondo pulsante
-      const easeOutQuintic = 1 - Math.pow(1 - progress, 5);
-      
-      window.scrollTo(0, startY + distance * easeOutQuintic);
+      const eased = 1 - Math.pow(1 - progress, 1.5);
+      window.scrollTo(0, startY + distance * eased);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }
@@ -281,31 +271,71 @@ export default function HeroSection() {
         {/* TITOLI */}
         <div className="relative w-full max-w-4xl min-h-[220px] md:min-h-[300px] grid place-items-center">
 
+          {/* ── Titolo Vecchio + Pulsante 1 ── */}
           <motion.div
             style={{ opacity: oldTitleOpacity, scale: oldTitleScale, display: oldTitleDisplay }}
-            className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-6 pointer-events-none"
+            className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-6"
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-satin-50 tracking-tighter leading-[0.85] text-center">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-satin-50 tracking-tighter leading-[0.85] text-center pointer-events-none">
               IL TUO SITO<br />
               <span className="text-satin-700">È UN</span><br />
               <span className="gradient-text-animated">DINOSAURO?</span>
             </h1>
-            <p className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase">
-              Inizia l&apos;evoluzione
-            </p>
+            <AnimatePresence mode="wait">
+              {showFirstHint ? (
+                <motion.button
+                  key="btn1"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  onClick={handleFirstHintClick}
+                  className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(0,229,255,0.25)] bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent"
+                >
+                  Inizia l&apos;evoluzione ⬇
+                </motion.button>
+              ) : (
+                <motion.p
+                  key="sub1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                  className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase pointer-events-none"
+                >
+                  Inizia l&apos;evoluzione
+                </motion.p>
+              )}
+            </AnimatePresence>
           </motion.div>
 
+          {/* ── Titolo Nuovo + Pulsante 2 ── */}
           <motion.div
             style={{ opacity: newTitleOpacity, scale: newTitleScale, display: newTitleDisplay }}
-            className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-8 pointer-events-none"
+            className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-8"
           >
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-satin-50 tracking-tighter leading-[0.85] text-center">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-satin-50 tracking-tighter leading-[0.85] text-center pointer-events-none">
               DESIGN <br />
               <span className="gradient-text-animated">SENZA CONFINI</span>
             </h2>
-            <p className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase">
-              Performance Estreme
-            </p>
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase pointer-events-none">
+                Performance Estreme
+              </p>
+              <AnimatePresence>
+                {showSecondHint && (
+                  <motion.button
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    onClick={handleSecondHintClick}
+                    className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(168,255,0,0.25)] bg-gradient-to-r from-neon-cyan to-neon-lime bg-clip-text text-transparent"
+                  >
+                    Scopri i servizi ⬇
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
         </div>
 
@@ -317,8 +347,8 @@ export default function HeroSection() {
             <NewSiteMockup elementsOpacity={elementsOpacity} elementsY={elementsY} />
           </div>
 
-          {/* Sopra: Vecchio Sito (L'esplosione a 8 frammenti) */}
-          <div className="col-start-1 row-start-1 z-20 w-full h-full perspective-2000 pointer-events-none">
+          {/* Sopra: Vecchio Sito — overflow-x-clip contiene i frammenti senza rompere sticky */}
+          <div className="col-start-1 row-start-1 z-20 w-full h-full perspective-2000 pointer-events-none overflow-x-clip">
             <div className="relative w-full h-full">
               {[...Array(8)].map((_, i) => (
                 <OldSiteFragment key={i} index={i} progress={scrollYProgress}>
@@ -338,44 +368,6 @@ export default function HeroSection() {
             <FloatingObject icon="📱" delay={1} className="-bottom-4 left-2 md:-bottom-8 md:-left-8" />
             <FloatingObject icon="💎" delay={1.5} className="-bottom-6 right-2 md:-bottom-12 md:-right-12" />
           </motion.div>
-        </div>
-
-        {/* ── ONBOARDING HINTS ── */}
-        <div className="absolute inset-0 z-50 pointer-events-none">
-          <AnimatePresence>
-            {showFirstHint && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="absolute w-full top-[76%] flex justify-center"
-              >
-                <button
-                  onClick={handleFirstHintClick}
-                  className="pointer-events-auto text-2xl md:text-4xl italic font-black font-serif bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent hover:opacity-80 transition-all duration-300 drop-shadow-[0_0_20px_rgba(0,229,255,0.8)] px-8 py-5 bg-satin-950/60 backdrop-blur-md rounded-2xl border border-satin-700/50 hover:scale-105"
-                >
-                  Inizia l'evoluzione ⬇
-                </button>
-              </motion.div>
-            )}
-            {showSecondHint && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="absolute w-full top-[78%] md:top-[80%] flex justify-center"
-              >
-                <button
-                  onClick={handleSecondHintClick}
-                  className="pointer-events-auto text-2xl md:text-4xl italic font-black font-serif bg-gradient-to-r from-neon-cyan to-neon-lime bg-clip-text text-transparent hover:opacity-80 transition-all duration-300 drop-shadow-[0_0_20px_rgba(168,255,0,0.8)] px-8 py-5 bg-satin-950/80 backdrop-blur-md rounded-2xl border border-satin-700/50 hover:scale-105"
-                >
-                  Scopri i servizi ⬇
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
       </div>
