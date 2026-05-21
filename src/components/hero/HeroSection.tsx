@@ -225,7 +225,10 @@ export default function HeroSection() {
   const handleFirstHintClick = () => {
     setShowFirstHint(false);
     if (!containerRef.current) return;
-    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * 0.58);
+    // Target dinamico: su mobile (schermo alto e stretto) spingiamo più in profondità
+    const isMobile = window.innerWidth < 768;
+    const multiplier = isMobile ? 0.72 : 0.58;
+    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * multiplier);
     const startY = window.scrollY;
     const distance = targetY - startY;
     const duration = 2000; // Scroll panoramico lento e immersivo (2 secondi)
@@ -235,10 +238,10 @@ export default function HeroSection() {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       
-      // Funzione di Easing (Cubic Ease-Out) per rendere la partenza e la fermata morbidissime
-      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      // Quintic Ease-Out: partenza reattiva con scatto, decelerazione lunga e dolce
+      const easeOutQuintic = 1 - Math.pow(1 - progress, 5);
       
-      window.scrollTo(0, startY + distance * easeOutCubic);
+      window.scrollTo(0, startY + distance * easeOutQuintic);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }
@@ -260,9 +263,10 @@ export default function HeroSection() {
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      // Quintic Ease-Out anche per il secondo pulsante
+      const easeOutQuintic = 1 - Math.pow(1 - progress, 5);
       
-      window.scrollTo(0, startY + distance * easeOutCubic);
+      window.scrollTo(0, startY + distance * easeOutQuintic);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }

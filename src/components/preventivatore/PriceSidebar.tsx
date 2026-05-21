@@ -131,7 +131,7 @@ export default function PriceSidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleSidebar}
-              className="fixed inset-0 z-40 bg-satin-950/60 backdrop-blur-sm max-w-full overflow-hidden lg:hidden"
+              className="fixed inset-0 z-40 lg:hidden"
             />
             <motion.div
               initial={{ y: "100%" }}
