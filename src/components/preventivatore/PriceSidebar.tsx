@@ -131,14 +131,14 @@ export default function PriceSidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleSidebar}
-              className="fixed inset-0 z-40 bg-satin-950/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-satin-950/60 backdrop-blur-sm max-w-full overflow-hidden lg:hidden"
             />
             <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 glass rounded-t-3xl border-t border-satin-700/50 p-6 max-h-[70vh] overflow-y-auto lg:hidden"
+              className="fixed bottom-0 left-0 right-0 z-50 glass rounded-t-3xl border-t border-satin-700/50 p-6 max-h-[70vh] overflow-y-auto overflow-x-hidden max-w-full lg:hidden"
             >
               <div className="mx-auto w-12 h-1 rounded-full bg-satin-600 mb-6" />
               <div className="flex items-center justify-between mb-4">

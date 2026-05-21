@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
+  AnimatePresence,
 } from "framer-motion";
 import GlowButton from "@/components/ui/GlowButton";
 
@@ -171,6 +172,104 @@ export default function HeroSection() {
   const elementsY = useTransform(scrollYProgress, [0.25, 0.45], [20, 0]);
   const floatingOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0, 1]);
 
+  // ── LOGICA ONBOARDING / SCROLL HINTS ──
+  const [showFirstHint, setShowFirstHint] = useState(false);
+  const [showSecondHint, setShowSecondHint] = useState(false);
+  const timer1Ref = useRef<NodeJS.Timeout | null>(null);
+  const timer2Ref = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const currentProgress = scrollYProgress.get();
+    if (currentProgress >= 0 && currentProgress <= 0.15) {
+      timer1Ref.current = setTimeout(() => {
+        setShowFirstHint(true);
+      }, 2500);
+    } else if (currentProgress >= 0.25 && currentProgress <= 0.60) {
+      timer2Ref.current = setTimeout(() => {
+        setShowSecondHint(true);
+      }, 1500);
+    }
+    return () => {
+      if (timer1Ref.current) clearTimeout(timer1Ref.current);
+      if (timer2Ref.current) clearTimeout(timer2Ref.current);
+    };
+  }, [scrollYProgress]);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Ad ogni scroll, resettiamo i timer
+    if (timer1Ref.current) clearTimeout(timer1Ref.current);
+    if (timer2Ref.current) clearTimeout(timer2Ref.current);
+
+    // Nascondi i pulsanti se usciamo dai range di tolleranza
+    if (latest > 0.15 && showFirstHint) setShowFirstHint(false);
+    if ((latest < 0.25 || latest > 0.60) && showSecondHint) setShowSecondHint(false);
+
+    // Timer 1: Inizio Pagina (con tolleranza fino a 0.15)
+    if (latest >= 0 && latest <= 0.15) {
+      if (!showFirstHint) {
+        timer1Ref.current = setTimeout(() => {
+          setShowFirstHint(true);
+        }, 2500);
+      }
+    } 
+    // Timer 2: Stato di Hold esteso (tra 0.25 e 0.60)
+    else if (latest >= 0.25 && latest <= 0.60) {
+      if (!showSecondHint) {
+        timer2Ref.current = setTimeout(() => {
+          setShowSecondHint(true);
+        }, 1500);
+      }
+    }
+  });
+
+  const handleFirstHintClick = () => {
+    setShowFirstHint(false);
+    if (!containerRef.current) return;
+    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * 0.58);
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 2000; // Scroll panoramico lento e immersivo (2 secondi)
+    let startTimestamp: number | null = null;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      // Funzione di Easing (Cubic Ease-Out) per rendere la partenza e la fermata morbidissime
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      
+      window.scrollTo(0, startY + distance * easeOutCubic);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
+
+  const handleSecondHintClick = () => {
+    setShowSecondHint(false);
+    const servicesSection = document.getElementById("preventivo") || document.getElementById("services") || document.querySelector('[id*="servizi"]');
+    if (!servicesSection) return;
+    
+    const targetY = servicesSection.getBoundingClientRect().top + window.scrollY;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 800;
+    let startTimestamp: number | null = null;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      
+      window.scrollTo(0, startY + distance * easeOutCubic);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
+
   return (
     <section ref={containerRef} className="relative h-[400vh] bg-satin-950">
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-6 gap-12 lg:gap-16">
@@ -230,11 +329,49 @@ export default function HeroSection() {
             style={{ opacity: floatingOpacity }}
             className="col-start-1 row-start-1 z-30 pointer-events-none relative w-full h-full"
           >
-            <FloatingObject icon="🚀" delay={0} className="-top-12 -left-12" />
-            <FloatingObject icon="⚡" delay={0.5} className="-top-8 -right-8" />
-            <FloatingObject icon="📱" delay={1} className="-bottom-8 -left-8" />
-            <FloatingObject icon="💎" delay={1.5} className="-bottom-12 -right-12" />
+            <FloatingObject icon="🚀" delay={0} className="-top-6 left-2 md:-top-12 md:-left-12" />
+            <FloatingObject icon="⚡" delay={0.5} className="-top-4 right-2 md:-top-8 md:-right-8" />
+            <FloatingObject icon="📱" delay={1} className="-bottom-4 left-2 md:-bottom-8 md:-left-8" />
+            <FloatingObject icon="💎" delay={1.5} className="-bottom-6 right-2 md:-bottom-12 md:-right-12" />
           </motion.div>
+        </div>
+
+        {/* ── ONBOARDING HINTS ── */}
+        <div className="absolute inset-0 z-50 pointer-events-none">
+          <AnimatePresence>
+            {showFirstHint && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute w-full top-[76%] flex justify-center"
+              >
+                <button
+                  onClick={handleFirstHintClick}
+                  className="pointer-events-auto text-2xl md:text-4xl italic font-black font-serif bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent hover:opacity-80 transition-all duration-300 drop-shadow-[0_0_20px_rgba(0,229,255,0.8)] px-8 py-5 bg-satin-950/60 backdrop-blur-md rounded-2xl border border-satin-700/50 hover:scale-105"
+                >
+                  Inizia l'evoluzione ⬇
+                </button>
+              </motion.div>
+            )}
+            {showSecondHint && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute w-full top-[78%] md:top-[80%] flex justify-center"
+              >
+                <button
+                  onClick={handleSecondHintClick}
+                  className="pointer-events-auto text-2xl md:text-4xl italic font-black font-serif bg-gradient-to-r from-neon-cyan to-neon-lime bg-clip-text text-transparent hover:opacity-80 transition-all duration-300 drop-shadow-[0_0_20px_rgba(168,255,0,0.8)] px-8 py-5 bg-satin-950/80 backdrop-blur-md rounded-2xl border border-satin-700/50 hover:scale-105"
+                >
+                  Scopri i servizi ⬇
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
       </div>
