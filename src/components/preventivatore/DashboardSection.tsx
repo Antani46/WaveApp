@@ -13,7 +13,7 @@ export default function DashboardSection() {
   return (
     <section id="preventivo" className="relative py-24 lg:py-32">
       {/* Background accent */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-neon-violet/[0.03] blur-[120px]" />
       </div>
 

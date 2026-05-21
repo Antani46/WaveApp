@@ -48,7 +48,6 @@
 
 /* ── Base ── */
 html {
-  scroll-behavior: smooth;
   background-color: var(--color-satin-950);
 }
 

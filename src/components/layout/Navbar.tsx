@@ -68,7 +68,7 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full max-w-[100vw] box-border overflow-hidden ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full max-w-full box-border overflow-hidden ${
         isScrolled
           ? "bg-satin-950/80 backdrop-blur-md border-b border-satin-700/50 shadow-lg py-2 md:py-3"
           : "bg-transparent py-3 md:py-5"
