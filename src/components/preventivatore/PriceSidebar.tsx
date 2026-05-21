@@ -138,7 +138,7 @@ export default function PriceSidebar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-satin-950 rounded-t-3xl border-t border-satin-700/50 shadow-2xl p-6 max-h-[70vh] overflow-y-auto overflow-x-hidden max-w-full lg:hidden"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-satin-950 rounded-t-3xl border-t border-satin-700/50 shadow-2xl p-6 max-h-[70vh] overflow-y-auto overflow-x-hidden w-full max-w-[100vw] box-border lg:hidden"
             >
               <div className="mx-auto w-12 h-1 rounded-full bg-satin-600 mb-6" />
               <div className="flex items-center justify-between mb-4">
