@@ -65,6 +65,7 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
     >
       <head>
+        <meta name="color-scheme" content="dark only" />
         <JsonLd />
       </head>
       <body className="min-h-dvh bg-background text-foreground font-sans">

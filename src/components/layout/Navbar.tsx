@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ export default function Navbar() {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (typeof window !== "undefined") {
-      // 1. Dynamic Threshold per saltare la Hero Section (400vh)
+      // 1. Dynamic Threshold to skip Hero Section
       const threshold = window.innerHeight * 3.8;
       
       if (latest > threshold && !isScrolled) {
@@ -27,7 +27,7 @@ export default function Navbar() {
         setIsScrolled(false);
       }
 
-      // 2. Scroll Spy per l'active state dei link
+      // 2. Scroll Spy for active section linking
       const sections = navItems.map((item) =>
         item.href === "__top__" ? null : document.querySelector(item.href)
       );
@@ -51,7 +51,7 @@ export default function Navbar() {
     }
   });
 
-  const scrollToSection = (href: string) => {
+  const scrollToSection = useCallback((href: string) => {
     if (href === "__top__") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -61,7 +61,7 @@ export default function Navbar() {
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, []);
 
   return (
     <motion.header
@@ -70,12 +70,12 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full max-w-full box-border overflow-hidden ${
         isScrolled
-          ? "bg-satin-950/80 backdrop-blur-md border-b border-satin-700/50 shadow-lg py-2 md:py-3"
-          : "bg-transparent py-3 md:py-5"
+          ? "bg-satin-950/80 backdrop-blur-md border-b border-satin-700/50 shadow-lg pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] md:pb-3 md:pt-[calc(0.75rem+env(safe-area-inset-top))]"
+          : "bg-transparent pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:pb-5 md:pt-[calc(1.25rem+env(safe-area-inset-top))]"
       }`}
     >
       <nav className="w-full max-w-7xl mx-auto flex items-center justify-between px-2 md:px-6 lg:px-8 gap-1 md:gap-4 box-border">
-        {/* Logo */}
+        {/* --- BRAND LOGO --- */}
         <Link
           href="/"
           className="group flex items-center gap-1 md:gap-2 shrink min-w-0"
@@ -90,7 +90,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav Links — sempre visibili, micro-copy su mobile */}
+        {/* --- NAVIGATION LINKS --- */}
         <div className="flex items-center gap-0.5 md:gap-1 shrink min-w-0">
           {navItems.map((item) => (
             <button
@@ -115,7 +115,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA — sempre visibile, compatto su mobile */}
+        {/* --- CALL TO ACTION --- */}
         <button
           onClick={() => scrollToSection("#preventivo")}
           data-cursor="pointer"

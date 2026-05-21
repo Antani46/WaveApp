@@ -1,16 +1,17 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, memo, useCallback } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
   AnimatePresence,
+  MotionValue,
 } from "framer-motion";
 
-/* ── Mockup del "sito vecchio" (Il tuo originale) ── */
-function OldSiteMockup({ opacity }: { opacity: number }) {
+/* --- LEGACY SITE MOCKUP --- */
+const OldSiteMockup = memo(function OldSiteMockup({ opacity }: { opacity: number }) {
   return (
     <motion.div style={{ opacity }} className="w-full h-full pointer-events-none">
       <div className="rounded-t-xl bg-gray-200 p-3 flex items-center gap-2">
@@ -46,10 +47,10 @@ function OldSiteMockup({ opacity }: { opacity: number }) {
       </div>
     </motion.div>
   );
-}
+});
 
-/* ── Nuova interfaccia (I tuoi colori custom) ── */
-function NewSiteMockup({ elementsOpacity, elementsY }: { elementsOpacity: any; elementsY: any; }) {
+/* --- REDESIGNED SITE MOCKUP --- */
+const NewSiteMockup = memo(function NewSiteMockup({ elementsOpacity, elementsY }: { elementsOpacity: MotionValue<number>; elementsY: MotionValue<number>; }) {
   return (
     <div className="w-full h-full pointer-events-none">
       <div className="rounded-t-xl bg-satin-800 p-3 flex items-center gap-2 border border-satin-700/50 border-b-0">
@@ -96,10 +97,10 @@ function NewSiteMockup({ elementsOpacity, elementsY }: { elementsOpacity: any; e
       </div>
     </div>
   );
-}
+});
 
-/* ── Frammenti originali (Gli 8 pezzi con rotazione casuale) ── */
-function OldSiteFragment({ index, progress, children }: { index: number; progress: any; children: React.ReactNode }) {
+/* --- LEGACY SITE FRAGMENTS --- */
+const OldSiteFragment = memo(function OldSiteFragment({ index, progress, children }: { index: number; progress: MotionValue<number>; children: React.ReactNode }) {
   const randomFactor = Math.sin(index * 123.45) * 0.5 + 0.5;
   const angle = (index / 8) * Math.PI * 2 + (randomFactor * 0.5);
   const distance = 1500 + (randomFactor * 1000);
@@ -133,10 +134,10 @@ function OldSiteFragment({ index, progress, children }: { index: number; progres
       </div>
     </motion.div>
   );
-}
+});
 
-/* ── Floating Objects ── */
-function FloatingObject({ icon, delay, className }: { icon: string; delay: number; className: string }) {
+/* --- FLOATING ELEMENTS --- */
+const FloatingObject = memo(function FloatingObject({ icon, delay, className }: { icon: string; delay: number; className: string }) {
   return (
     <motion.div
       animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
@@ -148,30 +149,31 @@ function FloatingObject({ icon, delay, className }: { icon: string; delay: numbe
       </div>
     </motion.div>
   );
-}
+});
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRafRef = useRef<number | null>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
 
-  // ── LA LOGICA DEI TITOLI ──
+  // --- ANIMATION LOGIC ---
 
-  // Titolo vecchio: sparisce, rimpicciolisce e poi viene eliminato dal DOM
+  // Legacy Title: Fades, scales down, and is removed from DOM
   const oldTitleOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const oldTitleScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.9]);
   const oldTitleDisplay = useTransform(scrollYProgress, (v) => v >= 0.12 ? "none" : "flex");
 
-  // Titolo nuovo: nasce nascosto, poi si attiva e appare
+  // Redesigned Title: Starts hidden, then fades in and scales up
   const newTitleOpacity = useTransform(scrollYProgress, [0.15, 0.3], [0, 1]);
   const newTitleScale = useTransform(scrollYProgress, [0.15, 0.3], [0.9, 1]);
   const newTitleDisplay = useTransform(scrollYProgress, (v) => v < 0.12 ? "none" : "flex");
 
-  // Elementi UI Nuovi
+  // Redesigned UI Elements
   const elementsOpacity = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
   const elementsY = useTransform(scrollYProgress, [0.25, 0.45], [20, 0]);
   const floatingOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0, 1]);
 
-  // ── LOGICA ONBOARDING / SCROLL HINTS ──
+  // --- ONBOARDING & SCROLL HINTS ---
   const [showFirstHint, setShowFirstHint] = useState(false);
   const [showSecondHint, setShowSecondHint] = useState(false);
   const timer1Ref = useRef<NodeJS.Timeout | null>(null);
@@ -191,6 +193,7 @@ export default function HeroSection() {
     return () => {
       if (timer1Ref.current) clearTimeout(timer1Ref.current);
       if (timer2Ref.current) clearTimeout(timer2Ref.current);
+      if (scrollRafRef.current) window.cancelAnimationFrame(scrollRafRef.current);
     };
   }, [scrollYProgress]);
 
@@ -217,12 +220,12 @@ export default function HeroSection() {
     }
   });
 
-  const handleFirstHintClick = () => {
+  const handleFirstHintClick = useCallback(() => {
     setShowFirstHint(false);
     if (!containerRef.current) return;
     const isMobile = window.innerWidth < 768;
     const targetMultiplier = isMobile ? 0.80 : 0.55;
-    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * targetMultiplier);
+    const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * targetMultiplier) - 80;
     const startY = window.scrollY;
     const distance = targetY - startY;
     const duration = 4000;
@@ -234,18 +237,19 @@ export default function HeroSection() {
       const easeOutQuad = 1 - (1 - progress) * (1 - progress);
       window.scrollTo(0, startY + distance * easeOutQuad);
       if (progress < 1) {
-        window.requestAnimationFrame(step);
+        scrollRafRef.current = window.requestAnimationFrame(step);
       }
     };
-    window.requestAnimationFrame(step);
-  };
+    if (scrollRafRef.current) window.cancelAnimationFrame(scrollRafRef.current);
+    scrollRafRef.current = window.requestAnimationFrame(step);
+  }, []);
 
-  const handleSecondHintClick = () => {
+  const handleSecondHintClick = useCallback(() => {
     setShowSecondHint(false);
     const servicesSection = document.getElementById("preventivo") || document.getElementById("services") || document.querySelector('[id*="servizi"]');
     if (!servicesSection) return;
     
-    const targetY = servicesSection.getBoundingClientRect().top + window.scrollY;
+    const targetY = servicesSection.getBoundingClientRect().top + window.scrollY - 80;
     const startY = window.scrollY;
     const distance = targetY - startY;
     const duration = 1200;
@@ -257,20 +261,21 @@ export default function HeroSection() {
       const eased = 1 - Math.pow(1 - progress, 1.5);
       window.scrollTo(0, startY + distance * eased);
       if (progress < 1) {
-        window.requestAnimationFrame(step);
+        scrollRafRef.current = window.requestAnimationFrame(step);
       }
     };
-    window.requestAnimationFrame(step);
-  };
+    if (scrollRafRef.current) window.cancelAnimationFrame(scrollRafRef.current);
+    scrollRafRef.current = window.requestAnimationFrame(step);
+  }, []);
 
   return (
     <section ref={containerRef} className="relative h-[400vh] bg-satin-950">
-      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-6 gap-12 lg:gap-16">
+      <div className="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden px-6 gap-12 lg:gap-16">
 
-        {/* TITOLI */}
+        {/* --- TITLES --- */}
         <div className="relative w-full max-w-4xl min-h-[220px] md:min-h-[300px] grid place-items-center">
 
-          {/* ── Titolo Vecchio + Pulsante 1 ── */}
+          {/* --- LEGACY TITLE & HINT --- */}
           <motion.div
             style={{ opacity: oldTitleOpacity, scale: oldTitleScale, display: oldTitleDisplay }}
             className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-6"
@@ -280,34 +285,36 @@ export default function HeroSection() {
               <span className="text-satin-700">È UN</span><br />
               <span className="gradient-text-animated">DINOSAURO?</span>
             </h1>
-            <AnimatePresence mode="wait">
-              {showFirstHint ? (
-                <motion.button
-                  key="btn1"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  onClick={handleFirstHintClick}
-                  className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(0,229,255,0.25)] bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent"
-                >
-                  Inizia l&apos;evoluzione ⬇
-                </motion.button>
-              ) : (
-                <motion.p
-                  key="sub1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                  className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase pointer-events-none"
-                >
-                  Inizia l&apos;evoluzione
-                </motion.p>
-              )}
-            </AnimatePresence>
+            <div className="h-[60px] md:h-[80px] flex items-center justify-center my-2">
+              <AnimatePresence mode="wait">
+                {showFirstHint ? (
+                  <motion.button
+                    key="btn1"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    onClick={handleFirstHintClick}
+                    className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(0,229,255,0.25)] bg-gradient-to-r from-neon-cyan to-neon-violet bg-clip-text text-transparent"
+                  >
+                    Inizia l&apos;evoluzione ⬇
+                  </motion.button>
+                ) : (
+                  <motion.p
+                    key="sub1"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                    className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase pointer-events-none"
+                  >
+                    Inizia l&apos;evoluzione
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
 
-          {/* ── Titolo Nuovo + Pulsante 2 ── */}
+          {/* --- REDESIGNED TITLE & HINT --- */}
           <motion.div
             style={{ opacity: newTitleOpacity, scale: newTitleScale, display: newTitleDisplay }}
             className="col-start-1 row-start-1 flex flex-col items-center justify-center gap-8"
@@ -320,33 +327,35 @@ export default function HeroSection() {
               <p className="text-xs md:text-sm text-neon-cyan font-bold tracking-[0.4em] uppercase pointer-events-none">
                 Performance Estreme
               </p>
-              <AnimatePresence>
-                {showSecondHint && (
-                  <motion.button
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    onClick={handleSecondHintClick}
-                    className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(168,255,0,0.25)] bg-gradient-to-r from-neon-cyan to-neon-lime bg-clip-text text-transparent"
-                  >
-                    Scopri i servizi ⬇
-                  </motion.button>
-                )}
-              </AnimatePresence>
+              <div className="h-[60px] md:h-[80px] flex items-center justify-center my-2">
+                <AnimatePresence>
+                  {showSecondHint && (
+                    <motion.button
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      onClick={handleSecondHintClick}
+                      className="rounded-full px-6 py-2.5 md:px-8 md:py-3 border border-neon-cyan/30 bg-satin-900/50 backdrop-blur-sm text-xs md:text-sm font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:border-neon-cyan/60 hover:shadow-[0_0_25px_rgba(168,255,0,0.25)] bg-gradient-to-r from-neon-cyan to-neon-lime bg-clip-text text-transparent"
+                    >
+                      Scopri i servizi ⬇
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </motion.div>
         </div>
 
-        {/* MOCKUPS */}
+        {/* --- MOCKUP CONTAINER --- */}
         <div className="relative w-full max-w-5xl aspect-[16/10] mx-auto grid place-items-center mt-4">
 
-          {/* Sotto: Nuovo Sito */}
+          {/* Bottom Layer: Redesigned Site */}
           <div className="col-start-1 row-start-1 z-10 w-full h-full">
             <NewSiteMockup elementsOpacity={elementsOpacity} elementsY={elementsY} />
           </div>
 
-          {/* Sopra: Vecchio Sito — overflow-x-clip contiene i frammenti senza rompere sticky */}
+          {/* Top Layer: Legacy Site Fragments (overflow-x-clip preserves sticky) */}
           <div className="col-start-1 row-start-1 z-20 w-full h-full perspective-2000 pointer-events-none overflow-x-clip">
             <div className="relative w-full h-full">
               {[...Array(8)].map((_, i) => (
@@ -357,7 +366,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Icone */}
+          {/* Floating Icons */}
           <motion.div
             style={{ opacity: floatingOpacity }}
             className="col-start-1 row-start-1 z-30 pointer-events-none relative w-full h-full"

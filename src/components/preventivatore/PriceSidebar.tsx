@@ -9,7 +9,7 @@ export default function PriceSidebar() {
 
   return (
     <>
-      {/* Floating badge (always visible when services selected) */}
+      {/* --- FLOATING BADGE (MOBILE) --- */}
       <AnimatePresence>
         {selectedServices.length > 0 && !isSidebarOpen && (
           <motion.button
@@ -18,7 +18,7 @@ export default function PriceSidebar() {
             exit={{ scale: 0, opacity: 0 }}
             onClick={toggleSidebar}
             data-cursor="pointer"
-            className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-full glass border-neon-cyan/30 px-5 py-3 shadow-[0_0_30px_rgba(0,229,255,0.15)] lg:hidden"
+            className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-40 flex items-center gap-3 rounded-full glass border-neon-cyan/30 px-5 py-3 shadow-[0_0_30px_rgba(0,229,255,0.15)] lg:hidden"
           >
             <span className="text-sm font-semibold text-neon-cyan">
               €{total.toLocaleString("it-IT")}
@@ -30,7 +30,7 @@ export default function PriceSidebar() {
         )}
       </AnimatePresence>
 
-      {/* Desktop sidebar (inline) */}
+      {/* --- DESKTOP SIDEBAR --- */}
       <div className="hidden lg:block sticky top-32 mt-8">
         <AnimatePresence mode="wait">
           {selectedServices.length === 0 ? (
@@ -67,7 +67,7 @@ export default function PriceSidebar() {
                 </span>
               </div>
 
-              {/* Selected services list */}
+              {/* --- SELECTED SERVICES LIST --- */}
               <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-1">
                 <AnimatePresence mode="popLayout">
                   {selectedServices.map((service) => (
@@ -102,10 +102,10 @@ export default function PriceSidebar() {
                 </AnimatePresence>
               </div>
 
-              {/* Divider */}
+              {/* --- DIVIDER --- */}
               <div className="h-px bg-satin-700/50" />
 
-              {/* Total */}
+              {/* --- TOTAL PRICE --- */}
               <div className="flex items-baseline justify-between">
                 <span className="text-sm text-satin-400">Totale</span>
                 <motion.span
@@ -122,7 +122,7 @@ export default function PriceSidebar() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile drawer */}
+      {/* --- MOBILE DRAWER --- */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>
@@ -138,7 +138,7 @@ export default function PriceSidebar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-satin-950 rounded-t-3xl border-t border-satin-700/50 shadow-2xl p-6 max-h-[70vh] overflow-y-auto overflow-x-hidden w-full max-w-full box-border lg:hidden"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-satin-950 rounded-t-3xl border-t border-satin-700/50 shadow-2xl pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6 px-6 max-h-[70dvh] overflow-y-auto overflow-x-hidden w-full max-w-full box-border lg:hidden"
             >
               <div className="mx-auto w-12 h-1 rounded-full bg-satin-600 mb-6" />
               <div className="flex items-center justify-between mb-4">
