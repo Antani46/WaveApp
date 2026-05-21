@@ -41,7 +41,6 @@ export const useQuoteStore = create<QuoteStore>((set, get) => ({
       if (state.selectedServices.some((s) => s.id === service.id)) return state;
       return {
         selectedServices: [...state.selectedServices, service],
-        isSidebarOpen: true,
       };
     }),
 

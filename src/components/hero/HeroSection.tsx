@@ -184,7 +184,7 @@ export default function HeroSection() {
       timer1Ref.current = setTimeout(() => {
         setShowFirstHint(true);
       }, 2500);
-    } else if (currentProgress >= 0.25 && currentProgress <= 0.60) {
+    } else if (currentProgress >= 0.25 && currentProgress <= 0.85) {
       timer2Ref.current = setTimeout(() => {
         setShowSecondHint(true);
       }, 1500);
@@ -202,7 +202,7 @@ export default function HeroSection() {
 
     // Nascondi i pulsanti se usciamo dai range di tolleranza
     if (latest > 0.15 && showFirstHint) setShowFirstHint(false);
-    if ((latest < 0.25 || latest > 0.60) && showSecondHint) setShowSecondHint(false);
+    if ((latest < 0.25 || latest > 0.85) && showSecondHint) setShowSecondHint(false);
 
     // Timer 1: Inizio Pagina (con tolleranza fino a 0.15)
     if (latest >= 0 && latest <= 0.15) {
@@ -212,8 +212,8 @@ export default function HeroSection() {
         }, 2500);
       }
     } 
-    // Timer 2: Stato di Hold esteso (tra 0.25 e 0.60)
-    else if (latest >= 0.25 && latest <= 0.60) {
+    // Timer 2: Stato di Hold esteso (tra 0.25 e 0.85)
+    else if (latest >= 0.25 && latest <= 0.85) {
       if (!showSecondHint) {
         timer2Ref.current = setTimeout(() => {
           setShowSecondHint(true);
@@ -231,7 +231,7 @@ export default function HeroSection() {
     const targetY = containerRef.current.offsetTop + (containerRef.current.offsetHeight * multiplier);
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 2000; // Scroll panoramico lento e immersivo (2 secondi)
+    const duration = 2500; // Scroll cinematografico dilatato (2.5 secondi)
     let startTimestamp: number | null = null;
 
     const step = (timestamp: number) => {
